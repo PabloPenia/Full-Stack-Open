@@ -13,26 +13,18 @@ const App = () => {
     <div>
       <Header course={course} />
       <Content>
-        <p>
-          {part1} {exercises1}
-        </p>
-        <p>
-          {part2} {exercises2}
-        </p>
-        <p>
-          {part3} {exercises3}
-        </p>
+        <Part part={part1} number={exercises1} />
+        <Part part={part2} number={exercises2} />
+        <Part part={part3} number={exercises3} />
       </Content>
       <Total ex={[exercises1, exercises2, exercises3]} />
     </div>
   )
 }
-const Header = course => <h1>{course}</h1>
-const Content = ({ children }) => {
-  return children
-}
-const Total = ({ ex }) => {
-  return <p>Number of exercises {ex[0] + ex[1] + ex[2]}</p>
-}
+const Header = ({ course }) => <h1>{course}</h1>
+const Content = ({ children }) => children
+const Part = ({ part, number }) => <p>{`${part} ${number}`}</p>
+const Total = ({ ex }) => <p>Number of exercises {ex[0] + ex[1] + ex[2]}</p>
+// render application
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(<App />)
