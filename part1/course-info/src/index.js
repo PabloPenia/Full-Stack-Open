@@ -3,33 +3,33 @@ import ReactDOM from 'react-dom/client'
 
 const App = () => {
   const course = 'Half Stack application development'
-  const part1 = {
-    name: 'Fundamentals of React',
-    exercises: 10,
-  }
-  const part2 = {
-    name: 'Using props to pass data',
-    exercises: 7,
-  }
-  const part3 = {
-    name: 'State of a component',
-    exercises: 14,
-  }
+  const parts = [
+    {
+      name: 'Fundamentals of React',
+      exercises: 10,
+    },
+    {
+      name: 'Using props to pass data',
+      exercises: 7,
+    },
+    {
+      name: 'State of a component',
+      exercises: 14,
+    },
+  ]
   return (
     <div>
       <Header title={course} />
-      <Content>
-        <Part part={part1} />
-        <Part part={part2} />
-        <Part part={part3} />
-      </Content>
-      <Total ex={[part1, part2, part3]} />
+      <Content array={parts} />
+      <Total ex={parts} />
     </div>
   )
 }
 const Header = ({ title }) => <h1>{title}</h1>
-const Content = ({ children }) => children
-const Part = ({ part }) => <p>{`${part.name} ${part.exercises}`}</p>
+const Content = ({ array }) => {
+  return array.map((item, index) => <Part obj={item} key={index} />)
+}
+const Part = ({ obj }) => <p>{`${obj.name} ${obj.exercises}`}</p>
 const Total = ({ ex }) => {
   const exTotal = ex.map(item => item.exercises).reduce((prev, curr) => prev + curr, 0)
   return <p>Number of exercises {exTotal}</p>
