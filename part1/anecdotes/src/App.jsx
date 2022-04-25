@@ -9,14 +9,25 @@ const App = ({ anecdotes }) => {
     newVote[selected] += 1
     setVote([...newVote])
   }
+  const mostRated = vote.indexOf(Math.max(...vote))
   return (
     <div>
-      <h1>{anecdotes[selected]}</h1>
+      <h1>Anecdote of the day</h1>
+      <p>
+        <strong>{anecdotes[selected]}</strong>
+      </p>
       <p>
         Has <strong>{vote[selected]}</strong> vote{vote[selected] > 1 && 's'}.
       </p>
       <button onClick={voteQuote}>Vote</button>
       <button onClick={getQuote}>Next Quote</button>
+      <h1>Most rated anecdote</h1>
+      <p>
+        <strong>{anecdotes[mostRated]}</strong>
+      </p>
+      <p>
+        Has <strong>{vote[mostRated]}</strong> vote{vote[mostRated] > 1 && 's'}.
+      </p>
     </div>
   )
 }
