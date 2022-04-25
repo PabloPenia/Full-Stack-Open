@@ -14,14 +14,16 @@ function App() {
       </div>
       <h1>Statistics</h1>
       {all > 0 ? (
-        <>
-          <Statistics text="Good" value={good} />
-          <Statistics text="Neutral" value={neutral} />
-          <Statistics text="Bad" value={bad} />
-          <Statistics text="All" value={all} />
-          <Statistics text="Average" value={(good - bad) / all} />
-          <Statistics text="Positive" value={(good / all) * 100} />
-        </>
+        <table>
+          <tbody>
+            <Statistics text="Good" value={good} />
+            <Statistics text="Neutral" value={neutral} />
+            <Statistics text="Bad" value={bad} />
+            <Statistics text="All" value={all} />
+            <Statistics text="Average" value={((good - bad) / all).toFixed(1)} />
+            <Statistics text="Positive" value={((good / all) * 100).toFixed(1)} />
+          </tbody>
+        </table>
       ) : (
         <p>No Feedback Given</p>
       )}
@@ -34,9 +36,12 @@ const Button = ({ text, setter }) => {
 }
 const Statistics = ({ text, value }) => {
   return (
-    <p>
-      {text} {value} {text === 'Positive' && '%'}
-    </p>
+    <tr>
+      <td>{text}</td>
+      <td>
+        {value} {text === 'Positive' && '%'}
+      </td>
+    </tr>
   )
 }
 export default App
