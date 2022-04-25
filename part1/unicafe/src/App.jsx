@@ -13,19 +13,21 @@ function App() {
         <button onClick={() => handler(setNeutral)}>Neutral</button>
         <button onClick={() => handler(setBad)}>Bad</button>
       </div>
-      {all > 0 && (
-        <>
-          <h1>Statistics</h1>
-          <p>Good {good}</p>
-          <p>Neutral {neutral}</p>
-          <p>Bad {bad}</p>
-          <p>All {all}</p>
-          <p>Average {(good - bad) / all}</p>
-          <p>Positive {(good / all) * 100} %</p>
-        </>
-      )}
+      {all > 0 && <Statistics bad={bad} good={good} neutral={neutral} all={all} />}
     </div>
   )
 }
-
+const Statistics = ({ good, neutral, bad, all }) => {
+  return (
+    <div>
+      <h1>Statistics</h1>
+      <p>Good {good}</p>
+      <p>Neutral {neutral}</p>
+      <p>Bad {bad}</p>
+      <p>All {all}</p>
+      <p>Average {(good - bad) / all}</p>
+      <p>Positive {(good / all) * 100} %</p>
+    </div>
+  )
+}
 export default App
