@@ -19,12 +19,11 @@ const App = () => {
       id: 3,
     },
   ]
-  //const Total = ({ sum }) => <p>Number of exercises {sum}</p>
+  //
 
   return (
     <div>
       <Course course={course} parts={parts} />
-      {/* <Total sum={parts[0].exercises + parts[1].exercises + parts[2].exercises} /> */}
     </div>
   )
 }
