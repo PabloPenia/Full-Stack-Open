@@ -1,4 +1,4 @@
-const Header = ({ course }) => <h1>{course}</h1>
+const Header = ({ title }) => <h2>{title}</h2>
 const Part = ({ name, exercises }) => (
   <p>
     {name} {exercises}
@@ -20,10 +20,10 @@ const Total = ({ parts }) => {
     </p>
   )
 }
-const Course = ({ course, parts }) => {
+const Course = ({ name, parts }) => {
   return (
     <div>
-      <Header course={course} />
+      <Header title={name} />
       <Content parts={parts} />
       <Total parts={parts} />
     </div>
