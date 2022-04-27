@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import ContactList from './components/ContactList'
+import NewContact from './components/NewContact'
+import Search from './components/Search'
 const DB = [
   { name: 'Arto Hellas', phone: '040-123456' },
   { name: 'Ada Lovelace', phone: '39-44-5323523' },
@@ -10,7 +13,7 @@ function App() {
   const [persons, setPersons] = useState(DB)
   const [newContact, setNewContact] = useState(INITIAL)
   const [keyword, setKeyword] = useState('')
-  // input handlers
+  // handlers
   const addPerson = e => {
     e.preventDefault()
     const exists = persons.some(person => person.name === newContact.name)
@@ -19,35 +22,20 @@ function App() {
     setPersons([...persons, newContact])
     setNewContact(INITIAL)
   }
-  const handleName = e => setNewContact({ ...newContact, name: e.target.value })
-  const handlePhone = e => setNewContact({ ...newContact, phone: e.target.value })
+  const handleInputs = e =>
+    setNewContact({
+      ...newContact,
+      [e.target.name]: e.target.value,
+    })
   const handleKeyword = e => setKeyword(e.target.value)
-  // other functions
-  const filtered = (arr, key) => arr.filter(person => (key !== '' ? person.name.toLowerCase().includes(key.toLowerCase()) : true))
   return (
     <div>
       <h1>Phonebook</h1>
-      <div>
-        filter shown with <input value={keyword} onChange={handleKeyword} />
-      </div>
+      <Search filter={keyword} handler={handleKeyword} />
       <h2>Add New</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newContact.name} onChange={handleName} />
-        </div>
-        <div>
-          number: <input value={newContact.phone} onChange={handlePhone} />
-        </div>
-        <div>
-          <button>add</button>
-        </div>
-      </form>
+      <NewContact handler={addPerson} inputHandler={handleInputs} state={newContact} />
       <h2>Contacts</h2>
-      {filtered(persons, keyword).map(person => (
-        <p key={person.name}>
-          {person.name} {person.phone}
-        </p>
-      ))}
+      <ContactList list={persons} keyword={keyword} />
     </div>
   )
 }
