@@ -4,7 +4,7 @@ const ContactList = ({ list, keyword }) => {
   return (
     <div>
       {filter(list, keyword).map(contact => (
-        <Contact key={contact.name} name={contact.name} phone={contact.phone} />
+        <Contact key={contact.id} name={contact.name} phone={contact.phone} />
       ))}
     </div>
   )

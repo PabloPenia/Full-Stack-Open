@@ -1,18 +1,21 @@
-import { useState } from 'react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import ContactList from './components/ContactList'
 import NewContact from './components/NewContact'
 import Search from './components/Search'
-const DB = [
-  { name: 'Arto Hellas', phone: '040-123456' },
-  { name: 'Ada Lovelace', phone: '39-44-5323523' },
-  { name: 'Dan Abramov', phone: '12-43-234345' },
-  { name: 'Mary Poppendieck', phone: '39-23-6423122' },
-]
 const INITIAL = { name: '', phone: '' }
 function App() {
-  const [persons, setPersons] = useState(DB)
+  const [persons, setPersons] = useState([])
   const [newContact, setNewContact] = useState(INITIAL)
   const [keyword, setKeyword] = useState('')
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    setLoading(true)
+    axios.get('http://localhost:3001/persons').then(response => {
+      setPersons(response.data)
+      setLoading(false)
+    })
+  }, [])
   // handlers
   const addPerson = e => {
     e.preventDefault()
@@ -26,6 +29,7 @@ function App() {
     setNewContact({
       ...newContact,
       [e.target.name]: e.target.value,
+      id: persons.length + 1,
     })
   const handleKeyword = e => setKeyword(e.target.value)
   return (
@@ -35,7 +39,7 @@ function App() {
       <h2>Add New</h2>
       <NewContact handler={addPerson} inputHandler={handleInputs} state={newContact} />
       <h2>Contacts</h2>
-      <ContactList list={persons} keyword={keyword} />
+      {loading ? <h3>Loading...</h3> : <ContactList list={persons} keyword={keyword} />}
     </div>
   )
 }
