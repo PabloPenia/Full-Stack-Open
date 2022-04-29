@@ -44,7 +44,7 @@ function App() {
           <Search filter={keyword} handler={handleKeyword} />
           <div>
             <p>{message}</p>
-            {result.length > 0 && <CountryList data={result} />}
+            {result.length > 0 && <CountryList data={result} setter={setKeyword} />}
           </div>
         </>
       )}

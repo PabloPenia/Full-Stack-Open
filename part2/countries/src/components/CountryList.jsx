@@ -1,4 +1,4 @@
-const CountryList = ({ data }) => {
+const CountryList = ({ data, setter }) => {
   const renderList = data.length > 1
 
   return (
@@ -6,7 +6,9 @@ const CountryList = ({ data }) => {
       {renderList ? (
         <ul>
           {data.map(country => (
-            <li key={country.name.common}>{country.name.common}</li>
+            <li key={country.name.common}>
+              {country.name.common} <button onClick={() => setter(country.name.common)}>Show</button>
+            </li>
           ))}
         </ul>
       ) : (
