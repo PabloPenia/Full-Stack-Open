@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import ContactList from './components/ContactList'
 import NewContact from './components/NewContact'
@@ -34,6 +33,14 @@ function App() {
       id: persons.length + 1,
     })
   const handleKeyword = e => setKeyword(e.target.value)
+  const handleDelete = id => {
+    const contact = persons.filter(person => person.id === id)
+    if (window.confirm(`Are you sure you want to delete ${contact[0].name} from the phonebook?`)) {
+      contacts.remove(id).then(() => {
+        const updatedPersons = persons.filter(person => person.id !== id)
+        setPersons([...updatedPersons])})
+    }
+  }
   return (
     <div>
       <h1>Phonebook</h1>
@@ -41,7 +48,7 @@ function App() {
       <h2>Add New</h2>
       <NewContact handler={addPerson} inputHandler={handleInputs} state={newContact} />
       <h2>Contacts</h2>
-      {loading ? <h3>Loading...</h3> : <ContactList list={persons} keyword={keyword} />}
+      {loading ? <h3>Loading...</h3> : <ContactList list={persons} keyword={keyword} remove={handleDelete} />}
     </div>
   )
 }
