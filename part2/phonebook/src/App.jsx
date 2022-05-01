@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import ContactList from './components/ContactList'
 import NewContact from './components/NewContact'
 import Search from './components/Search'
+import contacts from './services/contacts'
 const INITIAL = { name: '', phone: '' }
 function App() {
   const [persons, setPersons] = useState([])
@@ -11,8 +12,8 @@ function App() {
   const [loading, setLoading] = useState(false)
   useEffect(() => {
     setLoading(true)
-    axios.get('http://localhost:3001/persons').then(response => {
-      setPersons(response.data)
+    contacts.getAll().then(response => {
+      setPersons(response)
       setLoading(false)
     })
   }, [])
@@ -21,8 +22,8 @@ function App() {
     e.preventDefault()
     const exists = persons.some(person => person.name === newContact.name)
     if (exists) return alert(`${newContact.name} is already added to phonebook.`)
-    axios.post('http://localhost:3001/persons', newContact).then(response => {
-      setPersons([...persons, response.data])
+    contacts.create(newContact).then(response => {
+      setPersons([...persons, response])
       setNewContact(INITIAL)
     })
   }
