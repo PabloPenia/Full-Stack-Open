@@ -1,52 +1,54 @@
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 import CountryList from './components/CountryList'
 import Search from './components/Search'
-function App() {
+const App = () => {
   const [keyword, setKeyword] = useState('')
   const [countries, setCountries] = useState([])
-  const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
-  const [result, setResult] = useState([])
+  const [filtered, setFiltered] = useState([])
   useEffect(() => {
-    setLoading(true)
-    fetch('https://restcountries.com/v3.1/all')
-      .then(response => response.json())
-      .then(json => {
-        setCountries(json)
-        setLoading(false)
+    axios
+      .get('https://restcountries.com/v3.1/all')
+      .then(response => {
+        setCountries(response.data)
       })
+      .catch(error => setMessage(`Cannot retrieve data. Error: ${error}`))
   }, [])
   useEffect(() => {
-    setResult([])
     if (keyword !== '') {
-      const filtered = countries.filter(country => country.name.common.toLowerCase().includes(keyword.toLowerCase()))
-
-      if (filtered.length === 0) {
+      const filter = countries.filter(country => country.name.common.toLowerCase().includes(keyword.toLowerCase()))
+      if (filter.length === 0) {
         setMessage('There are no matches')
-      } else if (filtered.length > 10) {
+        setFiltered([])
+      } else if (filter.length > 10) {
         setMessage('Too many matches, specify another filter')
+        setFiltered([])
       } else {
         setMessage('')
-        setResult(filtered)
+        setFiltered(filter)
       }
     } else {
-      setMessage('Enter a keyword or country name to search in our DB.')
+      setMessage('Enter a keyword or country name to search in our database.')
     }
   }, [countries, keyword])
 
+  // handlers
   const handleKeyword = e => setKeyword(e.target.value)
   return (
     <>
-      {loading ? (
-        <h1>Please, wait. Loading...</h1>
-      ) : (
+      {countries.length > 0 ? (
         <>
-          <Search filter={keyword} handler={handleKeyword} />
-          <div>
-            <p>{message}</p>
-            {result.length > 0 && <CountryList data={result} setter={setKeyword} />}
-          </div>
+          <header>
+            <Search filter={keyword} handler={handleKeyword} />
+          </header>
+          <main>
+            {message !== '' && <h3>{message}</h3>}
+            {filtered.length > 0 && <CountryList data={filtered} setter={setKeyword} />}
+          </main>
         </>
+      ) : (
+        <h1>Please, wait. Loading...</h1>
       )}
     </>
   )

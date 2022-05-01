@@ -1,9 +1,8 @@
+import Country from './Country'
 const CountryList = ({ data, setter }) => {
-  const renderList = data.length > 1
-
   return (
-    <>
-      {renderList ? (
+    <article>
+      {data.length > 1 ? (
         <ul>
           {data.map(country => (
             <li key={country.name.common}>
@@ -12,24 +11,9 @@ const CountryList = ({ data, setter }) => {
           ))}
         </ul>
       ) : (
-        <article>
-          <h1>{data[0].name.common}</h1>
-          <p>
-            <strong>Capital:</strong> {data[0].capital}
-          </p>
-          <p>
-            <strong>Population:</strong> {data[0].population}
-          </p>
-          <h2>Language</h2>
-          <ul>
-            {Object.values(data[0].languages).map(item => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <img style={{ maxWidth: '400px' }} src={data[0].flags.svg} alt={`${data[0].name.common} flag`} />
-        </article>
+        <Country data={data[0]} />
       )}
-    </>
+    </article>
   )
 }
 export default CountryList
