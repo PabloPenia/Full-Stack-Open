@@ -3,12 +3,14 @@ import ContactList from './components/ContactList'
 import NewContact from './components/NewContact'
 import Search from './components/Search'
 import contacts from './services/contacts'
+import Notification from './components/Notification'
 const INITIAL = { name: '', phone: '' }
 function App() {
   const [persons, setPersons] = useState([])
   const [newContact, setNewContact] = useState(INITIAL)
   const [keyword, setKeyword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState(null)
   useEffect(() => {
     setLoading(true)
     contacts.getAll().then(response => {
@@ -19,12 +21,17 @@ function App() {
   // handlers
   const addPerson = e => {
     e.preventDefault()
+    const cleanMessage = () =>
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     const exists = persons.filter(person => person.name === newContact.name)
-    console.log(exists)
     if (exists.length > 0) {
       if (window.confirm(`${newContact.name} is already added to phonebook, replace the old phone with the new one?`)) {
         contacts.update(exists[0].id, newContact).then(response => setPersons([...persons.filter(person => person.id !== response.id), response]))
         setNewContact(INITIAL)
+        setMessage(`SUCCESS! ${newContact.name} has been updated`)
+        cleanMessage()
       } else {
         return
       }
@@ -32,9 +39,12 @@ function App() {
       contacts.create(newContact).then(response => {
         setPersons([...persons, response])
         setNewContact(INITIAL)
+        setMessage(`SUCCESS! ${newContact.name} has been added to the phonebook`)
+        cleanMessage()
       })
     }
   }
+
   const handleInputs = e =>
     setNewContact({
       ...newContact,
@@ -55,8 +65,10 @@ function App() {
     <div>
       <h1>Phonebook</h1>
       <Search filter={keyword} handler={handleKeyword} />
+
       <h2>Add New</h2>
       <NewContact handler={addPerson} inputHandler={handleInputs} state={newContact} />
+      <Notification message={message} />
       <h2>Contacts</h2>
       {loading ? <h3>Loading...</h3> : <ContactList list={persons} keyword={keyword} remove={handleDelete} />}
     </div>
