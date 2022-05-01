@@ -16,13 +16,14 @@ const remove = id => {
   return request
 }
 
-// const update = (id, newData) => {
-//   const request = axios.put(`${baseUrl}/${id}`, newData)
-//   return request.then(response => response.data)
-// }
+const update = (id, newData) => {
+  const request = axios.put(`${baseUrl}/${id}`, newData)
+  return request.then(response => response.data)
+}
 const contacts = {
   getAll,
   create,
   remove,
+  update,
 }
 export default contacts

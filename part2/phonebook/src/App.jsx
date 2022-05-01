@@ -19,12 +19,21 @@ function App() {
   // handlers
   const addPerson = e => {
     e.preventDefault()
-    const exists = persons.some(person => person.name === newContact.name)
-    if (exists) return alert(`${newContact.name} is already added to phonebook.`)
-    contacts.create(newContact).then(response => {
-      setPersons([...persons, response])
-      setNewContact(INITIAL)
-    })
+    const exists = persons.filter(person => person.name === newContact.name)
+    console.log(exists)
+    if (exists.length > 0) {
+      if (window.confirm(`${newContact.name} is already added to phonebook, replace the old phone with the new one?`)) {
+        contacts.update(exists[0].id, newContact).then(response => setPersons([...persons.filter(person => person.id !== response.id), response]))
+        setNewContact(INITIAL)
+      } else {
+        return
+      }
+    } else {
+      contacts.create(newContact).then(response => {
+        setPersons([...persons, response])
+        setNewContact(INITIAL)
+      })
+    }
   }
   const handleInputs = e =>
     setNewContact({
@@ -38,7 +47,8 @@ function App() {
     if (window.confirm(`Are you sure you want to delete ${contact[0].name} from the phonebook?`)) {
       contacts.remove(id).then(() => {
         const updatedPersons = persons.filter(person => person.id !== id)
-        setPersons([...updatedPersons])})
+        setPersons([...updatedPersons])
+      })
     }
   }
   return (
