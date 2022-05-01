@@ -21,9 +21,10 @@ function App() {
     e.preventDefault()
     const exists = persons.some(person => person.name === newContact.name)
     if (exists) return alert(`${newContact.name} is already added to phonebook.`)
-
-    setPersons([...persons, newContact])
-    setNewContact(INITIAL)
+    axios.post('http://localhost:3001/persons', newContact).then(response => {
+      setPersons([...persons, response.data])
+      setNewContact(INITIAL)
+    })
   }
   const handleInputs = e =>
     setNewContact({
