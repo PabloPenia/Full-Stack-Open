@@ -28,34 +28,20 @@ function App() {
     const exists = persons.filter(person => person.name === newContact.name)
     if (exists.length > 0) {
       if (window.confirm(`${newContact.name} is already added to phonebook, replace the old phone with the new one?`)) {
-        contacts
-          .update(exists[0].id, newContact)
-          .then(response => {
-            setPersons([...persons.filter(person => person.id !== response.id), response])
-            setNewContact(INITIAL)
-            setMessage(`SUCCESS! ${newContact.name} has been updated`)
-            cleanMessage()
-          })
-          .catch(error => {
-            setMessage(`ERROR! ${newContact.name} doesn't exist in the database. ${error}`)
-            cleanMessage()
-          })
+        contacts.update(exists[0].id, newContact).then(response => setPersons([...persons.filter(person => person.id !== response.id), response]))
+        setNewContact(INITIAL)
+        setMessage(`SUCCESS! ${newContact.name} has been updated`)
+        cleanMessage()
       } else {
         return
       }
     } else {
-      contacts
-        .create(newContact)
-        .then(response => {
-          setPersons([...persons, response])
-          setNewContact(INITIAL)
-          setMessage(`SUCCESS! ${newContact.name} has been added to the phonebook`)
-          cleanMessage()
-        })
-        .catch(error => {
-          setMessage(`ERROR! ${newContact.name} can't be added to the phonebook. ${error}`)
-          cleanMessage()
-        })
+      contacts.create(newContact).then(response => {
+        setPersons([...persons, response])
+        setNewContact(INITIAL)
+        setMessage(`SUCCESS! ${newContact.name} has been added to the phonebook`)
+        cleanMessage()
+      })
     }
   }
 
