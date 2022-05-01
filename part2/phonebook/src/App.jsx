@@ -19,29 +19,43 @@ function App() {
     })
   }, [])
   // handlers
+  const cleanMessage = () =>
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
   const addPerson = e => {
     e.preventDefault()
-    const cleanMessage = () =>
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
     const exists = persons.filter(person => person.name === newContact.name)
     if (exists.length > 0) {
       if (window.confirm(`${newContact.name} is already added to phonebook, replace the old phone with the new one?`)) {
-        contacts.update(exists[0].id, newContact).then(response => setPersons([...persons.filter(person => person.id !== response.id), response]))
-        setNewContact(INITIAL)
-        setMessage(`SUCCESS! ${newContact.name} has been updated`)
-        cleanMessage()
+        contacts
+          .update(exists[0].id, newContact)
+          .then(response => {
+            setPersons([...persons.filter(person => person.id !== response.id), response])
+            setNewContact(INITIAL)
+            setMessage(`SUCCESS! ${newContact.name} has been updated`)
+            cleanMessage()
+          })
+          .catch(error => {
+            setMessage(`ERROR! ${newContact.name} doesn't exist in the database. ${error}`)
+            cleanMessage()
+          })
       } else {
         return
       }
     } else {
-      contacts.create(newContact).then(response => {
-        setPersons([...persons, response])
-        setNewContact(INITIAL)
-        setMessage(`SUCCESS! ${newContact.name} has been added to the phonebook`)
-        cleanMessage()
-      })
+      contacts
+        .create(newContact)
+        .then(response => {
+          setPersons([...persons, response])
+          setNewContact(INITIAL)
+          setMessage(`SUCCESS! ${newContact.name} has been added to the phonebook`)
+          cleanMessage()
+        })
+        .catch(error => {
+          setMessage(`ERROR! ${newContact.name} can't be added to the phonebook. ${error}`)
+          cleanMessage()
+        })
     }
   }
 
@@ -55,10 +69,18 @@ function App() {
   const handleDelete = id => {
     const contact = persons.filter(person => person.id === id)
     if (window.confirm(`Are you sure you want to delete ${contact[0].name} from the phonebook?`)) {
-      contacts.remove(id).then(() => {
-        const updatedPersons = persons.filter(person => person.id !== id)
-        setPersons([...updatedPersons])
-      })
+      contacts
+        .remove(id)
+        .then(() => {
+          const updatedPersons = persons.filter(person => person.id !== id)
+          setPersons([...updatedPersons])
+          setMessage(`SUCCESS! ${contact[0].name} has been deleted from the phonebook`)
+          cleanMessage()
+        })
+        .catch(error => {
+          setMessage(`ERROR! ${contact[0].name} can't be deleted from the phonebook. ${error}`)
+          cleanMessage()
+        })
     }
   }
   return (
