@@ -1,0 +1,14 @@
+### Fetch All
+GET http://localhost:3001/api/persons
+### Fetch person
+GET http://localhost:3001/api/persons/2
+### Remove a person
+DELETE http://localhost:3001/api/persons/2
+### Add a person
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "James Hetfield",
+  "number": "56575"
+}
